@@ -59,8 +59,6 @@ connection.languages.diagnostics.on(async (params) => {
 			items: []
 		} satisfies DocumentDiagnosticReport;
 	} else {
-		// We don't know the document. We can either try to read it from disk
-		// or we don't report problems for it.
 		return {
 			kind: DocumentDiagnosticReportKind.Full,
 			items: []
