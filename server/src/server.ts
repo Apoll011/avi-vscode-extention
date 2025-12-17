@@ -24,13 +24,14 @@ export let onValidProject = true;
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
 	rootPath = URI.parse(params.workspaceFolders?.[0]?.uri || "").fsPath;
+
 	if (rootPath === "") {
 		onValidProject = false;
 		connection.sendNotification('window/showMessage', { type: 1, message: 'Avi LSP Server: No workspace folder found. Some features may not work properly.' });
 	}
 	const result: InitializeResult = {
 		capabilities: {
-			textDocumentSync: TextDocumentSyncKind.Incremental,
+			textDocumentSync: TextDocumentSyncKind.Full,
 			completionProvider: {
 				resolveProvider: true
 			},
