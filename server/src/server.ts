@@ -8,7 +8,7 @@ import {
 	DocumentDiagnosticReport,
 	DocumentDiagnosticReportKind,
 } from 'vscode-languageserver/node';
-
+import { URI } from 'vscode-uri';
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
@@ -20,11 +20,14 @@ const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments(TextDocument);
 let rootPath = "";
 export let configProviders: ConfigBasedCompletionProvider;
-
+export let onValidProject = true;
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
-	rootPath = params.workspaceFolders?.[0]?.uri || "C:/Users/tiago/RustroverProjects/AviCore/skills/saudation/";
-
+	rootPath = URI.parse(params.workspaceFolders?.[0]?.uri || "").fsPath;
+	if (rootPath === "") {
+		onValidProject = false;
+		connection.sendNotification('window/showMessage', { type: 1, message: 'Avi LSP Server: No workspace folder found. Some features may not work properly.' });
+	}
 	const result: InitializeResult = {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
@@ -46,7 +49,9 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
-	configProviders = new ConfigBasedCompletionProvider(rootPath);
+	if (onValidProject) {
+		configProviders = new ConfigBasedCompletionProvider(rootPath);
+	}
 	connection.sendNotification('window/showMessage', { type: 3, message: 'Avi LSP Server is running' });
 });
 

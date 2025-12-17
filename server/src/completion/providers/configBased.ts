@@ -107,6 +107,28 @@ export class ConfigBasedCompletionProvider {
     }
   }
 
+  private getContext(text: string, cursor: number) {
+    let start = cursor;
+    while (start > 0 && text[start - 1] !== '\n') {
+      start--;
+    }
+    const before = text.slice(start, cursor);
+
+    // AFTER: until space or newline
+    let end = cursor;
+    while (
+      end < text.length &&
+      text[end] !== ' ' &&
+      text[end] !== '\n'
+    ) {
+      end++;
+    }
+    const after = text.slice(cursor, end);
+
+    return { beforeCursor: before, afterCursor: after};
+  }
+
+
   /**
    * Check if the current position is inside a function call
    * that matches our configured functions
@@ -118,9 +140,7 @@ export class ConfigBasedCompletionProvider {
     const text = document.getText();
     const offset = document.offsetAt(pos.position);
 
-    // Get more context - look back further
-    const beforeCursor = text.substring(Math.max(0, offset - 500), offset);
-    const afterCursor = text.substring(offset, Math.min(text.length, offset + 50));
+    const {beforeCursor, afterCursor} = this.getContext(text, offset);
 
     for (const func of this.config.functions) {
       const funcPattern = new RegExp(`(?:^|[\\s;,({\\[]|\\.)${func.functionName}\\s*\\(([^)]*)`, "gi");
