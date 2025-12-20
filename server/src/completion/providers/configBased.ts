@@ -8,32 +8,14 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import * as path from "path";
-
-/**
- * Domain Model: Represents a function that can provide completions
- * based on configuration data
- */
-export interface CompletionFunction {
-  /** Function name to match in the DSL */
-  functionName: string;
-  
-  /** Argument position (0-indexed) where completion should trigger */
-  argumentPosition: number;
-  
-  /** Path to YAML config file relative to workspace */
-  configPath: string;
-    
-  /** Optional: description template for completion items */
-  descriptionTemplate?: string;
-
-  parser: (value: unknown) => unknown;
-}
+import { ConfigFunctions } from "../../types";
+import { DeclarationRegistry } from "../../declaration/types";
 
 /**
  * Domain Model: Configuration schema for the completion system
  */
 export interface CompletionConfig {
-  functions: CompletionFunction[];
+  functions: ConfigFunctions[];
 }
 
 /**
@@ -44,55 +26,14 @@ export class ConfigBasedCompletionProvider {
   private workspaceRoot: string;
   private dataCache: Map<string, any> = new Map();
 
-  constructor(workspaceRoot?: string) {
+  constructor(workspaceRoot?: string, functions?: DeclarationRegistry) {
     console.log(`ConfigBasedCompletionProvider initialized with workspace: ${workspaceRoot}`);
     this.workspaceRoot = workspaceRoot || process.cwd();
-    this.config = this.loadConfig();
+    this.config = functions
+      ? { functions: functions.configEntries }
+      : { functions: [] };
     this.preloadData();
     console.log(`Loaded config for functions: ${this.config.functions.map(f => f.functionName).join(", ")}`);
-  }
-
-  private loadConfig(): CompletionConfig {
-    return {
-      functions: [
-        {
-          functionName: "locale",
-          argumentPosition: 0,
-          configPath: "responses/en.lang",
-          parser: (value) => Object.keys((value as any).lang)
-        },
-        {
-          functionName: "get_constant",
-          argumentPosition: 0,
-          configPath: "config/const.config",
-          parser: (value) => Object.keys((value as any).constants)
-        },
-        {
-          functionName: "has_constant",
-          argumentPosition: 0,
-          configPath: "config/const.config",
-          parser: (value) => Object.keys((value as any).constants)
-        },
-        {
-          functionName: "get_setting",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-        {
-          functionName: "has_setting",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-         {
-          functionName: "get_setting_full",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-      ],
-    };
   }
 
   /**
@@ -107,7 +48,7 @@ export class ConfigBasedCompletionProvider {
   /**
    * Load and cache data for a specific function configuration
    */
-  private loadDataForFunction(func: CompletionFunction): string[] | any {
+  private loadDataForFunction(func: ConfigFunctions): string[] | any {
     if (this.dataCache.has(func.configPath)) {
       return this.dataCache.get(func.configPath);
     }
@@ -158,7 +99,7 @@ export class ConfigBasedCompletionProvider {
   private detectFunctionContext(
     document: TextDocument,
     pos: TextDocumentPositionParams
-  ): { func: CompletionFunction; needsQuotes: boolean } | null {
+  ): { func: ConfigFunctions; needsQuotes: boolean } | null {
     const text = document.getText();
     const offset = document.offsetAt(pos.position);
 
@@ -264,7 +205,6 @@ export class ConfigBasedCompletionProvider {
    */
   reload(): void {
     this.dataCache.clear();
-    this.config = this.loadConfig();
     this.preloadData();
   }
 }

@@ -16,13 +16,19 @@ import {
 import { completionHandler, completionResolve } from './completion/completion';
 import { ConfigBasedCompletionProvider } from './completion/providers/configBased';
 import { computeFoldingRanges } from './folding';
+import { DeclarationHandler } from './declaration/handler';
+import { DeclarationRegistry } from './declaration/types';
+import { DefinitionHandler } from './definition/definitionHandler';
 
 const connection = createConnection(ProposedFeatures.all);
 
 const documents = new TextDocuments(TextDocument);
 let rootPath = "";
 export let configProviders: ConfigBasedCompletionProvider;
+let declarationHandler: DeclarationHandler;
+let definitionHandler: DefinitionHandler;
 export let onValidProject = true;
+
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
 	rootPath = URI.parse(params.workspaceFolders?.[0]?.uri || "").fsPath;
@@ -42,6 +48,8 @@ connection.onInitialize((params: InitializeParams) => {
 				workspaceDiagnostics: false
 			},
 			foldingRangeProvider: true,
+			declarationProvider: true,
+			definitionProvider: true,
 			workspace: {
 				workspaceFolders: {
 					supported: true
@@ -53,8 +61,51 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
-	if (onValidProject) {
-		configProviders = new ConfigBasedCompletionProvider(rootPath);
+	if (onValidProject) {		    
+    const registry: DeclarationRegistry = {
+      configEntries: [
+        {
+          functionName: "locale",
+          argumentPosition: 0,
+          configPath: "responses/en.lang",
+          parser: (value) => Object.keys((value as any).lang)
+        },
+        {
+          functionName: "get_constant",
+          argumentPosition: 0,
+          configPath: "config/const.config",
+          parser: (value) => Object.keys((value as any).constants)
+        },
+        {
+          functionName: "has_constant",
+          argumentPosition: 0,
+          configPath: "config/const.config",
+          parser: (value) => Object.keys((value as any).constants)
+        },
+        {
+          functionName: "get_setting",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
+        },
+        {
+          functionName: "has_setting",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
+        },
+        {
+          functionName: "get_setting_full",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
+        },
+      ]
+    };
+    
+	configProviders = new ConfigBasedCompletionProvider(rootPath, registry);
+	definitionHandler = new DefinitionHandler(documents);
+    declarationHandler = new DeclarationHandler(documents, rootPath, registry);
 	}
 	connection.sendNotification('window/showMessage', { type: 3, message: 'Avi LSP Server is running' });
 });
@@ -88,6 +139,14 @@ connection.onFoldingRanges((params): FoldingRange[] => {
 	} catch {
 		return [];
 	}
+});
+connection.onDeclaration((params) => {
+  if (!declarationHandler) return null;
+  return declarationHandler.handle(params);
+});
+connection.onDefinition((params) => {
+  if (!definitionHandler) return null;
+  return definitionHandler.handle(params);
 });
 
 documents.listen(connection);

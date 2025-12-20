@@ -192,9 +192,8 @@ Goal: Let users move through code effortlessly.
 * [ ] Document symbols (`textDocument/documentSymbol`)
 * [ ] Symbol kinds (Function, Variable, Namespace)
 * [ ] Workspace symbols
-* [ ] Go to definition
-* [ ] Go to declaration
-* [ ] Go to implementation
+* [x] Go to definition
+* [x] Go to declaration
 * [ ] Find references
 * [ ] Peek definition support
 
