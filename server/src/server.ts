@@ -19,14 +19,19 @@ import { computeFoldingRanges } from './folding';
 import { DeclarationHandler } from './declaration/handler';
 import { DeclarationRegistry } from './declaration/types';
 import { DefinitionHandler } from './definition/definitionHandler';
+import { ReferencesHandler } from './references/referencesHandler';
+import { AVI_BUILTINS } from './completion/builtins';
 
 const connection = createConnection(ProposedFeatures.all);
 
 const documents = new TextDocuments(TextDocument);
 let rootPath = "";
 export let configProviders: ConfigBasedCompletionProvider;
+
 let declarationHandler: DeclarationHandler;
 let definitionHandler: DefinitionHandler;
+let referencesHandler: ReferencesHandler;
+
 export let onValidProject = true;
 
 connection.onInitialize((params: InitializeParams) => {
@@ -50,6 +55,7 @@ connection.onInitialize((params: InitializeParams) => {
 			foldingRangeProvider: true,
 			declarationProvider: true,
 			definitionProvider: true,
+			referencesProvider: true,
 			workspace: {
 				workspaceFolders: {
 					supported: true
@@ -62,51 +68,53 @@ connection.onInitialize((params: InitializeParams) => {
 
 connection.onInitialized(() => {
 	if (onValidProject) {		    
-    const registry: DeclarationRegistry = {
-      configEntries: [
-        {
-          functionName: "locale",
-          argumentPosition: 0,
-          configPath: "responses/en.lang",
-          parser: (value) => Object.keys((value as any).lang)
-        },
-        {
-          functionName: "get_constant",
-          argumentPosition: 0,
-          configPath: "config/const.config",
-          parser: (value) => Object.keys((value as any).constants)
-        },
-        {
-          functionName: "has_constant",
-          argumentPosition: 0,
-          configPath: "config/const.config",
-          parser: (value) => Object.keys((value as any).constants)
-        },
-        {
-          functionName: "get_setting",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-        {
-          functionName: "has_setting",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-        {
-          functionName: "get_setting_full",
-          argumentPosition: 0,
-          configPath: "config/settings.config",
-          parser: (value) => Object.keys((value as any).settings)
-        },
-      ]
-    };
-    
-	configProviders = new ConfigBasedCompletionProvider(rootPath, registry);
-	definitionHandler = new DefinitionHandler(documents);
-    declarationHandler = new DeclarationHandler(documents, rootPath, registry);
+		const registry: DeclarationRegistry = {
+		configEntries: [
+			{
+			functionName: "locale",
+			argumentPosition: 0,
+			configPath: "responses/en.lang",
+			parser: (value) => Object.keys((value as any).lang)
+			},
+			{
+			functionName: "get_constant",
+			argumentPosition: 0,
+			configPath: "config/const.config",
+			parser: (value) => Object.keys((value as any).constants)
+			},
+			{
+			functionName: "has_constant",
+			argumentPosition: 0,
+			configPath: "config/const.config",
+			parser: (value) => Object.keys((value as any).constants)
+			},
+			{
+			functionName: "get_setting",
+			argumentPosition: 0,
+			configPath: "config/settings.config",
+			parser: (value) => Object.keys((value as any).settings)
+			},
+			{
+			functionName: "has_setting",
+			argumentPosition: 0,
+			configPath: "config/settings.config",
+			parser: (value) => Object.keys((value as any).settings)
+			},
+			{
+			functionName: "get_setting_full",
+			argumentPosition: 0,
+			configPath: "config/settings.config",
+			parser: (value) => Object.keys((value as any).settings)
+			},
+		]
+		};
+		
+		configProviders = new ConfigBasedCompletionProvider(rootPath, registry);
+		definitionHandler = new DefinitionHandler(documents);
+		declarationHandler = new DeclarationHandler(documents, rootPath, registry);
+		referencesHandler = new ReferencesHandler(documents, rootPath, registry);
 	}
+	console.log(AVI_BUILTINS.length);
 	connection.sendNotification('window/showMessage', { type: 3, message: 'Avi LSP Server is running' });
 });
 
@@ -147,6 +155,10 @@ connection.onDeclaration((params) => {
 connection.onDefinition((params) => {
   if (!definitionHandler) return null;
   return definitionHandler.handle(params);
+});
+connection.onReferences((params) => {
+  if (!referencesHandler) return null;
+  return referencesHandler.handle(params);
 });
 
 documents.listen(connection);

@@ -5,6 +5,7 @@ export interface AviSymbol extends CompletionItem {
   kind: CompletionItemKind;
   detail?: string;
   documentation?: string;
+  //hoverText: string;
 }
 
 export const AVI_BUILTINS: AviSymbol[] = [
