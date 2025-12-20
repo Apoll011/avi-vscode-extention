@@ -1,1 +1,1 @@
-{"root":["./src/extension.ts"],"version":"5.9.2"}
+{"root":["./src/commands.ts","./src/definition.ts","./src/extension.ts","./src/intent.ts","./src/settings.ts","./src/symbol.ts","./src/types.ts","./src/workspace.ts"],"version":"5.9.2"}

@@ -8,7 +8,7 @@
   "publisher": "avi-team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apoll011/AviCore"
+    "url": "https://github.com/apoll011/avi-vscode-extention"
   },
   "categories": ["Programming Languages"],
   "keywords": [
@@ -20,9 +20,6 @@
   "engines": {
     "vscode": "^1.100.0"
   },
-  "activationEvents": [
-    "onLanguage:avi"
-  ],
   "main": "./client/out/extension",
   "contributes": {
     "languages": [
