@@ -65,6 +65,115 @@
         "settings.config": "yaml",
         "const.constdata": "yaml"
       }
+    },
+    "commands": [
+      {
+        "command": "avi.showSettingsPreview",
+        "title": "Avi: Show Settings Preview",
+        "category": "Avi",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "avi.testIntent",
+        "title": "Avi: Test Intent",
+        "category": "Avi",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "avi.createIntent",
+        "title": "Avi: Create New Intent",
+        "category": "Avi",
+        "icon": "$(add)"
+      },
+      {
+        "command": "avi.createEntity",
+        "title": "Avi: Create New Entity",
+        "category": "Avi",
+        "icon": "$(symbol-class)"
+      },
+      {
+        "command": "avi.addLanguage",
+        "title": "Avi: Add Language",
+        "category": "Avi",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "avi.showMissingTranslations",
+        "title": "Avi: Show Missing Translations",
+        "category": "Avi"
+      },
+      {
+        "command": "avi.addSetting",
+        "title": "Avi: Add Setting",
+        "category": "Avi",
+        "icon": "$(settings)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "avi.showSettingsPreview",
+          "when": "resourceLangId == avi || workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.testIntent",
+          "when": "resourceLangId == avi || workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.createIntent",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.createEntity",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.addLanguage",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.showMissingTranslations",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "avi.addSetting",
+          "when": "workspaceFolderCount > 0"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "avi.showSettingsPreview",
+          "when": "resourceLangId == avi",
+          "group": "navigation@1"
+        },
+        {
+          "command": "avi.testIntent",
+          "when": "resourceLangId == avi",
+          "group": "navigation@2"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "avi.createIntent",
+          "when": "explorerResourceIsFolder",
+          "group": "avi@1"
+        },
+        {
+          "command": "avi.createEntity",
+          "when": "explorerResourceIsFolder",
+          "group": "avi@2"
+        },
+        {
+          "command": "avi.addLanguage",
+          "when": "explorerResourceIsFolder",
+          "group": "avi@3"
+        },
+        {
+          "command": "avi.addSetting",
+          "when": "explorerResourceIsFolder",
+          "group": "avi@4"
+        }
+      ]
     }
   },
   "scripts": {
