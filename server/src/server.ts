@@ -7,6 +7,7 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReport,
 	DocumentDiagnosticReportKind,
+	FoldingRange,
 } from 'vscode-languageserver/node';
 import { URI } from 'vscode-uri';
 import {
@@ -14,6 +15,7 @@ import {
 } from 'vscode-languageserver-textdocument';
 import { completionHandler, completionResolve } from './completion/completion';
 import { ConfigBasedCompletionProvider } from './completion/providers/configBased';
+import { computeFoldingRanges } from './folding';
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -39,6 +41,7 @@ connection.onInitialize((params: InitializeParams) => {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
 			},
+			foldingRangeProvider: true,
 			workspace: {
 				workspaceFolders: {
 					supported: true
@@ -74,6 +77,19 @@ connection.languages.diagnostics.on(async (params) => {
 
 connection.onCompletion(completionHandler(documents));
 connection.onCompletionResolve(completionResolve);
+connection.onFoldingRanges((params): FoldingRange[] => {
+	const document = documents.get(params.textDocument.uri);
+	if (!document) {
+		return [];
+	}
+	
+	try {
+		return computeFoldingRanges(document);
+	} catch {
+		return [];
+	}
+});
+
 documents.listen(connection);
 
 connection.listen();

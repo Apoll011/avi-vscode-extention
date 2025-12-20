@@ -29,7 +29,8 @@
       {
         "id": "avi",
         "aliases": ["Avi DSL", "avi"],
-        "extensions": [".avi"]
+        "extensions": [".avi"],
+        "configuration": "./syntaxes/language-configuration.json"
       }
     ],
     "grammars": [

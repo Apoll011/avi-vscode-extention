@@ -114,6 +114,175 @@ All semantic analysis is driven by **Dyon**, not a parallel or mocked interprete
   * AECP
   * Avi skill runtime model
 
+Below is a **single, clean TODO.md roadmap** you can drop straight into your repo.
+It’s ordered **from easiest → hardest**, grounded in **what you already implemented** in the shown files, and aligned with **LSP 3.17**.
+Checked items reflect what your current server *actually does*, not what it merely declares.
+
+---
+
+# Avi DSL – Language Server Roadmap (LSP 3.17)
+
+## Phase 0 — Foundation (Already in place)
+
+* [x] LSP server bootstrap (`createConnection`)
+* [x] Workspace folder detection
+* [x] Graceful handling of missing workspace
+* [x] Full document sync (`TextDocumentSyncKind.Full`)
+* [x] Document store via `TextDocuments`
+* [x] Basic completion provider
+* [x] Completion resolve hook
+* [x] Diagnostics endpoint (stub, empty)
+* [x] Server lifecycle (`onInitialize`, `onInitialized`, `listen`)
+* [x] Modular completion architecture (providers)
+
+---
+
+## Phase 1 — Diagnostics & Stability
+
+Goal: Make errors visible and trustworthy.
+
+* [ ] Real diagnostics (syntax errors)
+* [ ] Semantic diagnostics (invalid intents, missing fields)
+* [ ] Range-accurate diagnostics
+* [ ] Severity levels (Error / Warning / Info)
+* [ ] Diagnostic codes & sources (`avi-dsl`)
+* [ ] Incremental diagnostics updates
+* [ ] Clear diagnostics on file close
+* [ ] Project-wide validation trigger
+
+---
+
+## Phase 2 — Smarter Completions
+
+Goal: Make completions feel “alive”.
+
+* [x] Built-in keyword completions
+* [x] Scope-based completions
+* [x] Current-file symbol completions
+* [x] Config-based completions
+* [ ] Context-aware completions (AST-driven)
+* [ ] Snippet completions
+* [ ] Completion item kinds (Function, Keyword, Variable)
+* [ ] Sorting & filtering (`sortText`, `filterText`)
+* [ ] Trigger characters
+* [ ] Commit characters
+* [ ] Documentation markdown support
+* [ ] Completion per node type (intent, fn, locale, config)
+
+---
+
+## Phase 3 — Hover & Help
+
+Goal: Explain the language inline.
+
+* [ ] Hover provider
+* [ ] Hover for functions
+* [ ] Hover for intents
+* [ ] Hover for keywords
+* [ ] Markdown hover formatting
+* [ ] Signature preview on hover
+* [ ] Link to docs/spec from hover
+
+---
+
+## Phase 4 — Symbols & Navigation
+
+Goal: Let users move through code effortlessly.
+
+* [ ] Document symbols (`textDocument/documentSymbol`)
+* [ ] Symbol kinds (Function, Variable, Namespace)
+* [ ] Workspace symbols
+* [ ] Go to definition
+* [ ] Go to declaration
+* [ ] Go to implementation
+* [ ] Find references
+* [ ] Peek definition support
+
+---
+
+### Phase 5 — Formatting & Edits
+
+Goal: Enforce a consistent style.
+
+* [x] Document formatting
+* [ ] Document formatting
+* [ ] Range formatting
+* [ ] On-type formatting
+* [ ] Indentation rules
+* [ ] Whitespace normalization
+* [ ] Comment formatting
+* [ ] Formatter config support
+
+---
+
+### Phase 6 — Rename & Refactors
+
+Goal: Safe, mechanical transformations.
+
+* [ ] Rename provider
+* [ ] Rename validation
+* [ ] Cross-file rename
+* [ ] Prepare rename
+* [ ] Safe intent renaming
+* [ ] Function refactor support
+* [ ] Config key refactors
+
+---
+
+### Phase 7 — Semantic Intelligence
+
+Goal: Make the language *understood*, not guessed.
+
+* [ ] Full AST parser
+* [ ] Incremental parsing
+* [ ] Symbol table
+* [ ] Scope resolution
+* [ ] Type inference (Intent, String, Bool, etc.)
+* [ ] Semantic diagnostics
+* [ ] Dead code detection
+* [ ] Unused symbol detection
+
+---
+
+### Phase 8 — Semantic Tokens
+
+Goal: True syntax highlighting.
+
+* [ ] Semantic tokens provider
+* [ ] Token types (function, keyword, variable)
+* [ ] Token modifiers
+* [ ] Incremental semantic tokens
+* [ ] Theme compatibility testing
+
+---
+
+### Phase 9 — Workspace Intelligence
+
+Goal: Treat the project as a system.
+
+* [ ] Multi-file intent resolution
+* [ ] Cross-file diagnostics
+* [ ] Dependency graph
+* [ ] Skill auto-discovery
+* [ ] Workspace-wide validation
+* [ ] Config hot-reload
+* [ ] File watching integration
+
+---
+
+### Phase 10 — Tooling & UX
+
+Goal: Professional developer experience.
+
+* [ ] Code actions (quick fixes)
+* [ ] Auto-imports
+* [ ] Refactor previews
+* [ ] Inline hints (inlay hints)
+* [ ] Custom commands
+* [ ] Progress reporting
+* [ ] Telemetry hooks (optional)
+* [ ] Performance profiling
+
 ## Running the Project
 
 1. Install dependencies:
