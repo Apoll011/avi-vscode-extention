@@ -64,13 +64,13 @@ export class ConfigBasedCompletionProvider {
         {
           functionName: "get_constant",
           argumentPosition: 0,
-          configPath: "config/const.constdata",
+          configPath: "config/const.config",
           parser: (value) => Object.keys((value as any).constants)
         },
         {
           functionName: "has_constant",
           argumentPosition: 0,
-          configPath: "config/const.constdata",
+          configPath: "config/const.config",
           parser: (value) => Object.keys((value as any).constants)
         },
         {
