@@ -55,6 +55,15 @@
           "description": "Traces the communication between VS Code and the Avi language server."
         }
       }
+    },
+    "configurationDefaults": {
+      "files.associations": {
+        "*.lang": "yaml",
+        "*.intent": "yaml",
+        "*.entity": "yaml",
+        "settings.config": "yaml",
+        "const.constdata": "yaml"
+      }
     }
   },
   "scripts": {

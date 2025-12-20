@@ -22,9 +22,6 @@ export interface CompletionFunction {
   
   /** Path to YAML config file relative to workspace */
   configPath: string;
-  
-  /** JSON path to extract values from YAML (e.g., "language" for top-level key) */
-  dataPath: string;
     
   /** Optional: description template for completion items */
   descriptionTemplate?: string;
@@ -55,10 +52,6 @@ export class ConfigBasedCompletionProvider {
     console.log(`Loaded config for functions: ${this.config.functions.map(f => f.functionName).join(", ")}`);
   }
 
-  /**
-   * Load the main configuration that defines which functions
-   * use which YAML files
-   */
   private loadConfig(): CompletionConfig {
     return {
       functions: [
@@ -66,8 +59,37 @@ export class ConfigBasedCompletionProvider {
           functionName: "locale",
           argumentPosition: 0,
           configPath: "responses/en.lang",
-          dataPath: "language",
           parser: (value) => Object.keys((value as any).lang)
+        },
+        {
+          functionName: "get_constant",
+          argumentPosition: 0,
+          configPath: "config/const.constdata",
+          parser: (value) => Object.keys((value as any).constants)
+        },
+        {
+          functionName: "has_constant",
+          argumentPosition: 0,
+          configPath: "config/const.constdata",
+          parser: (value) => Object.keys((value as any).constants)
+        },
+        {
+          functionName: "get_setting",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
+        },
+        {
+          functionName: "has_setting",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
+        },
+         {
+          functionName: "get_setting_full",
+          argumentPosition: 0,
+          configPath: "config/settings.config",
+          parser: (value) => Object.keys((value as any).settings)
         },
       ],
     };
