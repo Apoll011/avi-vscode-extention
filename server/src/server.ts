@@ -21,6 +21,7 @@ import { DeclarationRegistry } from './declaration/types';
 import { DefinitionHandler } from './definition/definitionHandler';
 import { ReferencesHandler } from './references/referencesHandler';
 import { AVI_BUILTINS } from './completion/builtins';
+import { createHoverHandler } from './hover';
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -56,6 +57,7 @@ connection.onInitialize((params: InitializeParams) => {
 			declarationProvider: true,
 			definitionProvider: true,
 			referencesProvider: true,
+			hoverProvider: true,
 			workspace: {
 				workspaceFolders: {
 					supported: true
@@ -159,6 +161,18 @@ connection.onDefinition((params) => {
 connection.onReferences((params) => {
   if (!referencesHandler) return null;
   return referencesHandler.handle(params);
+});
+connection.onHover((params) => {
+  const document = documents.get(params.textDocument.uri);
+  if (!document) {
+    return null;
+  }
+  
+  try {
+    return createHoverHandler(document, params.position);
+  } catch {
+    return null;
+  }
 });
 
 documents.listen(connection);
