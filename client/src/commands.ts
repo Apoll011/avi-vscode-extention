@@ -37,9 +37,12 @@ export function registerCommands(context: vscode.ExtensionContext, currentWorksp
       }
 
       const intentName = await vscode.window.showInputBox({
-        prompt: 'Enter intent name (e.g., light.turn_on)',
+        prompt: 'Enter intent name (e.g., light@turn_on)',
+        value: currentWorkspace?.manifest.id + "@",
         validateInput: (value) => {
           if (!value) return 'Intent name is required';
+          if (value.indexOf(' ') !== -1) return 'No spaces allowed';
+          if (!value.startsWith(currentWorkspace?.manifest.id + "@")) return 'Must include skill namespace (' + currentWorkspace?.manifest.id + '@' + ')';
           if (!/^[a-z_@.]+$/.test(value)) return 'Invalid format';
           return null;
         }
