@@ -51,6 +51,11 @@
           ],
           "default": "off",
           "description": "Traces the communication between VS Code and the Avi language server."
+        },
+        "avi.intentApiUrl": {
+          "type": "string",
+          "default": "http://localhost:1178/intent_recognition",
+          "description": "URL for the intent recognition API endpoint"
         }
       }
     },
