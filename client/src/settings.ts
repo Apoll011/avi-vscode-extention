@@ -58,7 +58,6 @@ export class SettingsPreviewPanel {
         </head>
         <body>
           <div class="empty-state">
-            <div class="empty-state-icon">📋</div>
             <h2>No Configuration Found</h2>
             <p>This skill doesn't have settings or constants defined.</p>
           </div>
@@ -308,7 +307,6 @@ export class SettingsPreviewPanel {
     let html = `
       <div class="card">
         <div class="card-header">
-          <span class="card-icon">🔒</span>
           <span class="card-title">Constants</span>
           <span class="card-badge">${constantCount}</span>
         </div>
@@ -344,7 +342,6 @@ export class SettingsPreviewPanel {
       html += `
         <div class="card">
           <div class="card-header">
-            <span class="card-icon">⚙️</span>
             <span class="card-title">${this.escapeHtml(displayGroupName)}</span>
             <span class="card-badge">${settingCount}</span>
           </div>

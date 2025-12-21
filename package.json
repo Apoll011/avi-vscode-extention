@@ -65,7 +65,7 @@
         "*.intent": "yaml",
         "*.entity": "yaml",
         "settings.config": "yaml",
-        "const.constdata": "yaml"
+        "const.const": "yaml"
       }
     },
     "commands": [
