@@ -40,7 +40,7 @@ function validateSkillWorkspace(workspace: SkillWorkspace): vscode.Diagnostic[] 
   
   // Validate intent handlers
   for (const intent of workspace.intents) {
-    const handlerName = `fn intent_${intent.name.split('@')[1]}`;
+    const handlerName = `fn intent_${intent.name.split('@')[1].replace('.', '_')}()`;
     const hasHandler = workspace.aviFiles.some(f => f.content.includes(handlerName));
     
     if (!hasHandler) {

@@ -89,6 +89,10 @@ export function registerCommands(context: vscode.ExtensionContext, currentWorksp
         }
       });
 
+      const automatically_extensible = await vscode.window.showQuickPick(["Yes", "No"], {
+        placeHolder: 'Is this entity automatically extensible?',
+      });
+
       if (!entityName) return;
 
       const entityPath = path.join(
@@ -101,7 +105,7 @@ export function registerCommands(context: vscode.ExtensionContext, currentWorksp
       const entityContent = yaml.dump({
         type: 'entity',
         name: entityName,
-        automatically_extensible: false,
+        automatically_extensible: automatically_extensible === "Yes",
         values: []
       });
 
