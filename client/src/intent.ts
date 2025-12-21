@@ -40,8 +40,6 @@ export class IntentTestPanel {
     const apiUrl = vscode.workspace.getConfiguration('avi').get<string>('intentApiUrl', 'http://localhost:1178/intent_recognition');
 
     try {
-            console.log(`Sending intent test request to ${apiUrl} with utterance: ${utterance}`);
-
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
       

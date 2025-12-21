@@ -20,7 +20,6 @@ import { DeclarationHandler } from './declaration/handler';
 import { DeclarationRegistry } from './declaration/types';
 import { DefinitionHandler } from './definition/definitionHandler';
 import { ReferencesHandler } from './references/referencesHandler';
-import { AVI_BUILTINS } from './completion/builtins';
 import { createHoverHandler } from './hover';
 
 const connection = createConnection(ProposedFeatures.all);
@@ -116,7 +115,7 @@ connection.onInitialized(() => {
 		declarationHandler = new DeclarationHandler(documents, rootPath, registry);
 		referencesHandler = new ReferencesHandler(documents, rootPath, registry);
 	}
-	console.log(AVI_BUILTINS.length);
+
 	connection.sendNotification('window/showMessage', { type: 3, message: 'Avi LSP Server is running' });
 });
 
