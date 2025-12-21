@@ -70,3 +70,33 @@ export class SkillWorkspace {
     public settings?: SettingsConfig
   ) {}
 }
+
+export interface IntentResponse {
+  input: string;
+  intent: {
+    intentName: string | null;
+    probability: number;
+  } | null;
+  slots: Array<{
+    rawValue: string;
+    value: {
+      kind: string;
+      value: any;
+      grain?: string;
+      precision?: string;
+    };
+    entity: string;
+    slotName: string;
+    range: {
+      start: number;
+      end: number;
+    };
+  }>;
+}
+
+export interface TestHistory {
+  utterance: string;
+  intent: string | null;
+  confidence: number;
+  timestamp: number;
+}

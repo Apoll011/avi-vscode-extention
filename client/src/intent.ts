@@ -1,34 +1,6 @@
 import * as vscode from 'vscode';
+import { TestHistory, IntentResponse } from './types';
 
-interface IntentResponse {
-  input: string;
-  intent: {
-    intentName: string | null;
-    probability: number;
-  } | null;
-  slots: Array<{
-    rawValue: string;
-    value: {
-      kind: string;
-      value: any;
-      grain?: string;
-      precision?: string;
-    };
-    entity: string;
-    slotName: string;
-    range: {
-      start: number;
-      end: number;
-    };
-  }>;
-}
-
-interface TestHistory {
-  utterance: string;
-  intent: string | null;
-  confidence: number;
-  timestamp: number;
-}
 
 export class IntentTestPanel {
   private panel: vscode.WebviewPanel | undefined;
